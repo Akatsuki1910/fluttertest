@@ -19,7 +19,7 @@ jobs:
 
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter build web --base-href=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}
+      - run: flutter build web --base-href='/${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}/'
       - uses: actions/upload-pages-artifact@v3
         with:
           path: build/web/
