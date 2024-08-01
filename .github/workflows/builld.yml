@@ -11,6 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: install java
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21.x"
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -20,8 +25,16 @@ jobs:
       - run: flutter --version
       - run: flutter pub get
 
-      - run: echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
+      - name: build apk
+        run: flutter build apk
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: build/app/outputs/flutter-apk/app-?.apk
+
+      - run: echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
       - run: flutter build web --base-href='/${{ env.REPOSITORY_NAME }}/'
       - uses: actions/upload-pages-artifact@v3
         with:
