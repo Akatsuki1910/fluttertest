@@ -4,6 +4,8 @@ import 'package:fluttertest/main.dart';
 import 'package:provider/provider.dart';
 
 class GeneratorPage extends StatelessWidget {
+  const GeneratorPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
