@@ -62,10 +62,10 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch (selectedIndex) {
       case 0:
-        page = GeneratorPage();
+        page = const GeneratorPage();
         break;
       case 1:
-        page = FavoritesPage();
+        page = const FavoritesPage();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');

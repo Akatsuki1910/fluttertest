@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: "19.x"
+          java-version: "22.x"
           cache: "gradle"
 
       - name: Set up Flutter
@@ -38,9 +38,10 @@ jobs:
           path: build/app/outputs/flutter-apk/app-debug.apk
 
       - run: echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_ENV
-      - run: flutter build web --base-href='/${{ env.REPOSITORY_NAME }}/'
+      - run: flutter build web --base-href='/$REPOSITORY_NAME/'
       - uses: actions/upload-pages-artifact@v3
         with:
+          name: web
           path: build/web/
 
   deploy:
