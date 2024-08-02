@@ -41,7 +41,6 @@ jobs:
       - run: flutter build web --base-href='/${{ env.REPOSITORY_NAME }}/'
       - uses: actions/upload-pages-artifact@v3
         with:
-          name: web
           path: build/web/
 
   deploy:
@@ -60,5 +59,3 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          artifact_name: web
