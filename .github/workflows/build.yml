@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: "22.x"
+          java-version: "21.x"
           cache: "gradle"
 
       - name: Set up Flutter
