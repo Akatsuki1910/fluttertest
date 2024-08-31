@@ -5,5 +5,7 @@
 <https://codelabs.developers.google.com/codelabs/flutter-codelab-first?hl=ja>
 
 ```sh
+flutter doctor -v
+flutter upgrade --force
 flutter run -d chrome
 ```
