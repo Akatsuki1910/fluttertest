@@ -29,6 +29,9 @@ class _TestScreenState extends State<TestScreen> {
 
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
+        appBar: AppBar(
+          title: const Text('Test Screen'),
+        ),
         body: Row(
           children: [
             SafeArea(
