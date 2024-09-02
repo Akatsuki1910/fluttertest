@@ -7,21 +7,25 @@ import 'package:fluttertest/test/test_screen.dart';
 void main() async {
   usePathUrlStrategy();
 
-  WidgetsFlutterBinding.ensureInitialized();
-  final cameras = await availableCameras();
-  final firstCamera = cameras.first;
-  print(firstCamera);
+  List<CameraDescription> cameras = [];
 
-  runApp(MyApp(camera: firstCamera));
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    cameras = await availableCameras();
+  } on CameraException catch (e) {
+    print('Error: $e.code\nError Message: $e.description');
+  }
+
+  runApp(MyApp(cameras: cameras));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({
     super.key,
-    required this.camera,
+    required this.cameras,
   });
 
-  final CameraDescription camera;
+  final List<CameraDescription> cameras;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +36,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
       ),
       home: MyHomePage(
-        camera: camera,
+        cameras: cameras,
       ),
       routes: {TestScreen.routeName: (ctx) => const TestScreen()},
     );
@@ -42,10 +46,10 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({
     super.key,
-    required this.camera,
+    required this.cameras,
   });
 
-  final CameraDescription camera;
+  final List<CameraDescription> cameras;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -60,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     switch (selectedIndex) {
       case 1:
-        page = CameraPage(camera: widget.camera);
+        page = CameraPage(cameras: widget.cameras);
         break;
       default:
         page = const Center(child: Text('start page'));
@@ -105,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       label: Text('Home'),
                     ),
                     NavigationRailDestination(
-                      icon: Icon(Icons.build),
+                      icon: Icon(Icons.photo_camera),
                       label: Text('Camera'),
                     ),
                   ],
