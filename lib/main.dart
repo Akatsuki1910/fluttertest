@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:fluttertest/home/Camera.dart';
+import 'package:fluttertest/home/Clock.dart';
 import 'package:fluttertest/home/Push.dart';
 import 'package:fluttertest/test/test_screen.dart';
 
@@ -88,6 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
           page: CameraPage(cameras: widget.cameras),
           title: 'Camera',
           icon: Icons.photo_camera),
+      PagesData(page: const ClockPage(), title: 'Clock', icon: Icons.timer),
       PagesData(page: const PushPage(), title: 'Push', icon: Icons.push_pin),
     ];
 
@@ -105,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text(
                     'Test App',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 24,
                     ),
                   ),
