@@ -1,7 +1,9 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:fluttertest/home/Camera.dart';
+import 'package:fluttertest/home/Push.dart';
 import 'package:fluttertest/test/test_screen.dart';
 
 void main() async {
@@ -15,6 +17,15 @@ void main() async {
   } on CameraException catch (e) {
     print('Error: $e.code\nError Message: $e.description');
   }
+
+  FlutterLocalNotificationsPlugin()
+    ..resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission()
+    ..initialize(const InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      iOS: DarwinInitializationSettings(),
+    ));
 
   runApp(MyApp(cameras: cameras));
 }
@@ -55,20 +66,30 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+class PagesData {
+  final Widget page;
+  final String title;
+  final IconData icon;
+
+  PagesData({required this.page, required this.title, required this.icon});
+}
+
 class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    Widget page;
-
-    switch (selectedIndex) {
-      case 1:
-        page = CameraPage(cameras: widget.cameras);
-        break;
-      default:
-        page = const Center(child: Text('start page'));
-    }
+    final pages = <PagesData>[
+      PagesData(
+          page: const Center(child: Text('start page')),
+          title: 'Home',
+          icon: Icons.home),
+      PagesData(
+          page: CameraPage(cameras: widget.cameras),
+          title: 'Camera',
+          icon: Icons.photo_camera),
+      PagesData(page: const PushPage(), title: 'Push', icon: Icons.push_pin),
+    ];
 
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
@@ -103,16 +124,12 @@ class _MyHomePageState extends State<MyHomePage> {
               SafeArea(
                 child: NavigationRail(
                   extended: constraints.maxWidth >= 1000,
-                  destinations: const [
-                    NavigationRailDestination(
-                      icon: Icon(Icons.home),
-                      label: Text('Home'),
-                    ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.photo_camera),
-                      label: Text('Camera'),
-                    ),
-                  ],
+                  destinations: pages
+                      .map((e) => NavigationRailDestination(
+                            icon: Icon(e.icon),
+                            label: Text(e.title),
+                          ))
+                      .toList(),
                   selectedIndex: selectedIndex,
                   onDestinationSelected: (value) {
                     setState(() {
@@ -125,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Container(
                   color: Theme.of(context).colorScheme.primaryContainer,
                   child: Center(
-                    child: page,
+                    child: pages[selectedIndex].page,
                   ),
                 ),
               ),
