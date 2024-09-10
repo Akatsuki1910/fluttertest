@@ -16,12 +16,6 @@ class ConsolidatedClock extends StatelessWidget {
           top: 120,
           child: DigitalClockRenderer(
             time: time,
-            digitWidth: 12,
-            style: const TextStyle(
-              fontSize: 18,
-              color: Colors.black87,
-              fontWeight: FontWeight.bold,
-            ),
           ),
         ),
         // 真ん中に配置

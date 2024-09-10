@@ -7,23 +7,13 @@ import 'package:fluttertest/components/ClockMarker.dart';
 
 class AnalogClockRenderer extends StatelessWidget {
   final DateTime time;
-  final double radius;
-  final Color plateColor;
-  final Color dialColor;
-  final Color secondColor;
-  final Color minuteColor;
-  final Color hourColor;
 
   const AnalogClockRenderer({
     super.key,
     required this.time,
-    this.radius = 120.0,
-    this.plateColor = Colors.black,
-    this.dialColor = Colors.black,
-    this.secondColor = Colors.red,
-    this.minuteColor = Colors.grey,
-    this.hourColor = Colors.grey,
   });
+
+  final double radius = 120.0;
 
   int get secondsInMillisecond => time.second * 1000 + time.millisecond;
   int get minutesInSecond => time.minute * 60 + time.second;

@@ -13,27 +13,32 @@ class _ClockPageState extends State<ClockPage> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-        body: Center(
-      child: Padding(
-        padding: EdgeInsets.all(32),
+      body: Center(
         child: Column(
           children: [
-            Text('Timer-driven Clock'),
             Expanded(
-              flex: 9,
-              child: TimerBuilder(),
-            ),
-            Spacer(flex: 1),
+                child: Padding(
+                    padding: EdgeInsets.all(32),
+                    child: Column(children: [
+                      Text('Timer-driven Clock'),
+                      Expanded(
+                        child: TimerBuilder(),
+                      )
+                    ]))),
             Divider(thickness: 6),
-            Spacer(flex: 2),
-            Text('Ticker-driven Clock'),
             Expanded(
-              flex: 9,
-              child: TickerBuilder(),
-            ),
+                child: Padding(
+                    padding: EdgeInsets.all(32),
+                    child: Column(children: [
+                      Text('Ticker-driven Clock'),
+                      Expanded(
+                        flex: 9,
+                        child: TickerBuilder(),
+                      ),
+                    ]))),
           ],
         ),
       ),
-    ));
+    );
   }
 }

@@ -32,7 +32,7 @@ class _TimerBuilderState extends State<TimerBuilder> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(_) {
     return ConsolidatedClock(time: _time);
   }
 }

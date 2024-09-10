@@ -18,7 +18,7 @@ class _TickerBuilderState extends State<TickerBuilder>
   void initState() {
     super.initState();
     _time = DateTime.now();
-    _ticker = createTicker((elapsed) {
+    _ticker = createTicker((_) {
       setState(() {
         _time = DateTime.now();
       });
@@ -33,7 +33,7 @@ class _TickerBuilderState extends State<TickerBuilder>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(_) {
     return ConsolidatedClock(time: _time);
   }
 }

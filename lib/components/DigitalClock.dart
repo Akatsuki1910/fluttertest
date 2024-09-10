@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertest/components/TimeContainer.dart';
+
+timeText(time, digits) {
+  return time.toString().padLeft(digits, '0');
+}
+
+const digitWidth = 12.0;
+
+const style = TextStyle(
+  fontSize: 18,
+  color: Colors.red,
+  fontWeight: FontWeight.bold,
+);
 
 class DigitalClockRenderer extends StatelessWidget {
   final DateTime time;
-  final double digitWidth;
-  final TextStyle? style;
 
   const DigitalClockRenderer({
     super.key,
     required this.time,
-    this.digitWidth = 12.0,
-    this.style,
   });
 
   @override
@@ -18,41 +25,17 @@ class DigitalClockRenderer extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TimeContainer(
-              time: time.hour,
-              digits: 2,
-              digitWidth: digitWidth,
-              suffix: ':',
-              style: style,
-            ),
-            TimeContainer(
-              time: time.minute,
-              digits: 2,
-              digitWidth: digitWidth,
-              suffix: ':',
-              style: style,
-            ),
-            TimeContainer(
-              time: time.second,
-              digits: 2,
-              digitWidth: digitWidth,
-              style: style,
-            ),
-          ],
+        Text(
+          timeText(time.hour, 2) +
+              ':' +
+              timeText(time.minute, 2) +
+              ':' +
+              timeText(time.second, 2),
+          style: style,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TimeContainer(
-              time: time.millisecond,
-              digits: 3,
-              digitWidth: digitWidth,
-              style: style,
-            ),
-          ],
+        Text(
+          timeText(time.millisecond, 3),
+          style: style,
         ),
       ],
     );
