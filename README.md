@@ -9,3 +9,5 @@ flutter doctor -v
 flutter upgrade --force
 flutter run -d chrome
 ```
+
+https://qiita.com/nonoik/items/0c676a278558a1ee3ebc

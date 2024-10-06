@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:fluttertest/components/home_screen.dart';
 import 'package:fluttertest/home/Battely.dart';
 import 'package:fluttertest/home/Camera.dart';
 import 'package:fluttertest/home/Clock.dart';
@@ -92,7 +93,10 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: Icons.photo_camera),
       PagesData(page: const ClockPage(), title: 'Clock', icon: Icons.timer),
       PagesData(page: const PushPage(), title: 'Push', icon: Icons.push_pin),
+      PagesData(
           page: const BattelyPage(), title: 'Battery', icon: Icons.battery_std),
+      PagesData(
+          page: const MyHomeWidgetPage(), title: 'Widget', icon: Icons.widgets)
     ];
 
     return LayoutBuilder(builder: (context, constraints) {
