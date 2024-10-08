@@ -2,10 +2,10 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:fluttertest/components/home_screen.dart';
 import 'package:fluttertest/home/Battely.dart';
 import 'package:fluttertest/home/Camera.dart';
 import 'package:fluttertest/home/Clock.dart';
+import 'package:fluttertest/home/MyHomeWidget.dart';
 import 'package:fluttertest/home/Push.dart';
 import 'package:fluttertest/test/test_screen.dart';
 

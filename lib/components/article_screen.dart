@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './home_screen.dart';
+import '../home/MyHomeWidget.dart';
 import 'news_data.dart';
 
 class ArticleScreen extends StatefulWidget {

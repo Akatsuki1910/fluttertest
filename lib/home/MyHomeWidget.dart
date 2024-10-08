@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:home_widget/home_widget.dart'; // Add this import
 
-import 'article_screen.dart';
-import 'news_data.dart';
+import '../components/article_screen.dart';
+import '../components/news_data.dart';
 
 // TODO: Replace with your App Group ID
 const String appGroupId = '<YOUR APP GROUP>'; // Add from here
