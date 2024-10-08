@@ -3,7 +3,10 @@ package com.example.fluttertest
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.widget.RemoteViews
+import java.io.File
 import es.antonborri.home_widget.HomeWidgetPlugin
 
 /**
@@ -25,6 +28,16 @@ class NewAppWidget : AppWidgetProvider() {
 
                 val description = widgetData.getString("headline_description", null)
                 setTextViewText(R.id.headline_description, description ?: "No description set")
+
+                val imageName = widgetData.getString("filename", null)
+                val imageFile = File(imageName)
+                val imageExists = imageFile.exists()
+                if (imageExists) {
+                    val myBitmap: Bitmap = BitmapFactory.decodeFile(imageFile.absolutePath)
+                    setImageViewBitmap(R.id.widget_image, myBitmap)
+                } else {
+                    println("image not found!, looked @: ${imageName}")
+                }
             }
 
             appWidgetManager.updateAppWidget(appWidgetId, views)

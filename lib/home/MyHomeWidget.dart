@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:home_widget/home_widget.dart'; // Add this import
+import 'package:home_widget/home_widget.dart';
 
 import '../components/article_screen.dart';
 import '../components/news_data.dart';
 
 // TODO: Replace with your App Group ID
-const String appGroupId = '<YOUR APP GROUP>'; // Add from here
+const String appGroupId = '<YOUR APP GROUP>';
 const String iOSWidgetName = 'NewAppWidget';
-const String androidWidgetName = 'NewAppWidget'; // To here.
+const String androidWidgetName = 'NewAppWidget';
 
 class MyHomeWidgetPage extends StatefulWidget {
   const MyHomeWidgetPage({super.key});

@@ -10,4 +10,9 @@ flutter upgrade --force
 flutter run -d chrome
 ```
 
-https://qiita.com/nonoik/items/0c676a278558a1ee3ebc
+<https://qiita.com/nonoik/items/0c676a278558a1ee3ebc>
+
+```sh
+flutter emulators --launch Pixel_8_Pro_API_34 --cold
+flutter run
+```
