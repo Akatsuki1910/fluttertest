@@ -3,6 +3,7 @@
 ![build](https://github.com/Akatsuki1910/fluttertest/actions/workflows/build.yml/badge.svg)
 
 <https://codelabs.developers.google.com/codelabs/flutter-codelab-first?hl=ja>
+<https://pub.dev/packages/share_plus/example>
 
 ```sh
 flutter doctor -v

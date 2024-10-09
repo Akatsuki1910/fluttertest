@@ -7,6 +7,7 @@ import 'package:fluttertest/home/Camera.dart';
 import 'package:fluttertest/home/Clock.dart';
 import 'package:fluttertest/home/MyHomeWidget.dart';
 import 'package:fluttertest/home/Push.dart';
+import 'package:fluttertest/home/Share.dart';
 import 'package:fluttertest/test/test_screen.dart';
 
 void main() async {
@@ -96,7 +97,8 @@ class _MyHomePageState extends State<MyHomePage> {
       PagesData(
           page: const BattelyPage(), title: 'Battery', icon: Icons.battery_std),
       PagesData(
-          page: const MyHomeWidgetPage(), title: 'Widget', icon: Icons.widgets)
+          page: const MyHomeWidgetPage(), title: 'Widget', icon: Icons.widgets),
+      PagesData(page: const SharePage(), title: 'Share', icon: Icons.share)
     ];
 
     return LayoutBuilder(builder: (context, constraints) {

@@ -46,6 +46,9 @@ dependencies:
   video_player: ^2.9.1
   flutter_local_notifications: ^17.2.2
   home_widget: ^0.7.0
+  share_plus: ^10.0.3
+  file_selector: ^1.0.3
+  image_picker: ^1.0.0
 
 dev_dependencies:
   flutter_test:
