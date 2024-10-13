@@ -50,6 +50,7 @@ dependencies:
   file_selector: ^1.0.3
   image_picker: ^1.0.0
   mobile_scanner: ^6.0.1
+  flutter_blue_plus: ^1.33.4
 
 dev_dependencies:
   flutter_test:

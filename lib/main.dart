@@ -1,8 +1,10 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:fluttertest/home/Battely.dart';
+import 'package:fluttertest/home/Blue.dart';
 import 'package:fluttertest/home/Camera.dart';
 import 'package:fluttertest/home/Clock.dart';
 import 'package:fluttertest/home/MyHomeWidget.dart';
@@ -13,6 +15,7 @@ import 'package:fluttertest/test/test_screen.dart';
 
 void main() async {
   usePathUrlStrategy();
+  FlutterBluePlus.setLogLevel(LogLevel.verbose, color: true);
 
   List<CameraDescription> cameras = [];
 
@@ -101,6 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
           page: const MyHomeWidgetPage(), title: 'Widget', icon: Icons.widgets),
       PagesData(page: const SharePage(), title: 'Share', icon: Icons.share),
       PagesData(page: const QRPage(), title: 'QR', icon: Icons.qr_code),
+      PagesData(
+          page: const BluePage(), title: 'Bluetooth', icon: Icons.bluetooth),
     ];
 
     return LayoutBuilder(builder: (context, constraints) {
