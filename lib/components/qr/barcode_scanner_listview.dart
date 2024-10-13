@@ -2,83 +2,130 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import './scanner_button_widgets.dart';
 import './scanner_error_widget.dart';
 
-class BarcodeScannerListView extends StatefulWidget {
+final barcodeScannerControllerProvider = StateNotifierProvider<
+    BarcodeScannerControllerNotifier, MobileScannerController>(
+  (ref) => BarcodeScannerControllerNotifier(),
+);
+
+class BarcodeScannerControllerNotifier
+    extends StateNotifier<MobileScannerController> {
+  BarcodeScannerControllerNotifier()
+      : super(MobileScannerController(torchEnabled: true));
+
+  Future<void> start() async {
+    await state.start();
+  }
+
+  Future<void> stop() async {
+    await state.stop();
+  }
+
+  Future<void> disposeController() async {
+    await state.dispose();
+  }
+
+  void setZoom(double zoomFactor) {
+    state.setZoomScale(zoomFactor);
+  }
+}
+
+class BarcodeScannerListView extends HookConsumerWidget {
   const BarcodeScannerListView({super.key});
 
   @override
-  State<BarcodeScannerListView> createState() => _BarcodeScannerListViewState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(barcodeScannerControllerProvider);
 
-class _BarcodeScannerListViewState extends State<BarcodeScannerListView>
-    with WidgetsBindingObserver {
-  final MobileScannerController controller = MobileScannerController(
-    torchEnabled: true,
-  );
+    useEffect(() {
+      final lifecycleEventHandler = LifecycleEventHandler(
+        resumeCallBack: () async {
+          await controller.start();
+        },
+        suspendingCallBack: () async {
+          await controller.stop();
+        },
+      );
 
-  StreamSubscription<Object?>? _subscription;
+      WidgetsBinding.instance.addObserver(lifecycleEventHandler);
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
+      return () {
+        WidgetsBinding.instance.removeObserver(lifecycleEventHandler);
+      };
+    }, [controller]);
 
-    unawaited(controller.start());
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (!controller.value.hasCameraPermission) {
-      return;
-    }
-
-    switch (state) {
-      case AppLifecycleState.detached:
-      case AppLifecycleState.hidden:
-      case AppLifecycleState.paused:
-        return;
-      case AppLifecycleState.resumed:
-        unawaited(controller.start());
-      case AppLifecycleState.inactive:
-        unawaited(_subscription?.cancel());
-        _subscription = null;
-        unawaited(controller.stop());
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BarcodeScanner(controller: controller);
-  }
-
-  @override
-  Future<void> dispose() async {
-    WidgetsBinding.instance.removeObserver(this);
-    unawaited(_subscription?.cancel());
-    _subscription = null;
-    super.dispose();
-    await controller.dispose();
+    return Scaffold(
+      appBar: AppBar(title: const Text('With ListView')),
+      backgroundColor: Colors.black,
+      body: BarcodeScanner(controller: controller),
+    );
   }
 }
 
-class BarcodeScanner extends StatefulWidget {
+class BarcodeScanner extends HookConsumerWidget {
   const BarcodeScanner({super.key, required this.controller});
   final MobileScannerController controller;
 
   @override
-  State<BarcodeScanner> createState() => _BarcodeScannerState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final zoomFactor = useState(0.0);
 
-class _BarcodeScannerState extends State<BarcodeScanner> {
-  double _zoomFactor = 0.0;
+    final scanWindow = Rect.fromCenter(
+      center: MediaQuery.sizeOf(context).center(Offset.zero),
+      width: 200,
+      height: 200,
+    );
 
-  Widget _buildBarcodesListView() {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        MobileScanner(
+          scanWindow: scanWindow,
+          controller: controller,
+          errorBuilder: (context, error, child) {
+            return ScannerErrorWidget(error: error);
+          },
+          fit: BoxFit.contain,
+        ),
+        _buildBarcodeOverlay(controller),
+        _buildScanWindow(scanWindow),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            alignment: Alignment.bottomCenter,
+            height: 150,
+            color: Colors.black.withOpacity(0.4),
+            child: Column(
+              children: [
+                _buildZoomScaleSlider(controller, zoomFactor),
+                Expanded(child: _buildBarcodesListView(controller)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ToggleFlashlightButton(controller: controller),
+                    StartStopMobileScannerButton(controller: controller),
+                    const Spacer(),
+                    SwitchCameraButton(controller: controller),
+                    AnalyzeImageFromGalleryButton(controller: controller),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBarcodesListView(MobileScannerController controller) {
     return StreamBuilder<BarcodeCapture>(
-      stream: widget.controller.barcodes,
+      stream: controller.barcodes,
       builder: (context, snapshot) {
         final barcodes = snapshot.data?.barcodes;
 
@@ -108,9 +155,12 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
     );
   }
 
-  Widget _buildZoomScaleSlider() {
+  Widget _buildZoomScaleSlider(
+    MobileScannerController controller,
+    ValueNotifier<double> zoomFactor,
+  ) {
     return ValueListenableBuilder(
-      valueListenable: widget.controller,
+      valueListenable: controller,
       builder: (context, state, child) {
         if (!state.isInitialized || !state.isRunning) {
           return const SizedBox.shrink();
@@ -132,12 +182,10 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
               ),
               Expanded(
                 child: Slider(
-                  value: _zoomFactor,
+                  value: zoomFactor.value,
                   onChanged: (value) {
-                    setState(() {
-                      _zoomFactor = value;
-                      widget.controller.setZoomScale(value);
-                    });
+                    zoomFactor.value = value;
+                    controller.setZoomScale(value);
                   },
                 ),
               ),
@@ -153,16 +201,16 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
     );
   }
 
-  Widget _buildBarcodeOverlay() {
+  Widget _buildBarcodeOverlay(MobileScannerController controller) {
     return ValueListenableBuilder(
-      valueListenable: widget.controller,
+      valueListenable: controller,
       builder: (context, value, child) {
         if (!value.isInitialized || !value.isRunning || value.error != null) {
           return const SizedBox();
         }
 
         return StreamBuilder<BarcodeCapture>(
-          stream: widget.controller.barcodes,
+          stream: controller.barcodes,
           builder: (context, snapshot) {
             final BarcodeCapture? barcodeCapture = snapshot.data;
 
@@ -194,7 +242,7 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
 
   Widget _buildScanWindow(Rect scanWindowRect) {
     return ValueListenableBuilder(
-      valueListenable: widget.controller,
+      valueListenable: controller,
       builder: (context, value, child) {
         if (!value.isInitialized ||
             !value.isRunning ||
@@ -209,91 +257,22 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
       },
     );
   }
-
-  @override
-  Widget build(BuildContext context) {
-    final scanWindow = Rect.fromCenter(
-      center: MediaQuery.sizeOf(context).center(Offset.zero),
-      width: 200,
-      height: 200,
-    );
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('With ListView')),
-      backgroundColor: Colors.black,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          MobileScanner(
-            scanWindow: scanWindow,
-            controller: widget.controller,
-            errorBuilder: (context, error, child) {
-              return ScannerErrorWidget(error: error);
-            },
-            fit: BoxFit.contain,
-          ),
-          _buildBarcodeOverlay(),
-          _buildScanWindow(scanWindow),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              alignment: Alignment.bottomCenter,
-              height: 150,
-              color: Colors.black.withOpacity(0.4),
-              child: Column(
-                children: [
-                  if (!kIsWeb) _buildZoomScaleSlider(),
-                  Expanded(
-                    child: _buildBarcodesListView(),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ToggleFlashlightButton(controller: widget.controller),
-                      StartStopMobileScannerButton(
-                          controller: widget.controller),
-                      const Spacer(),
-                      SwitchCameraButton(controller: widget.controller),
-                      AnalyzeImageFromGalleryButton(
-                          controller: widget.controller),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
-class ScannerOverlay extends CustomPainter {
-  ScannerOverlay(this.scanWindow);
+class LifecycleEventHandler extends WidgetsBindingObserver {
+  LifecycleEventHandler(
+      {required this.resumeCallBack, required this.suspendingCallBack});
 
-  final Rect scanWindow;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final backgroundPath = Path()..addRect(Rect.largest);
-    final cutoutPath = Path()..addRect(scanWindow);
-
-    final backgroundPaint = Paint()
-      ..color = Colors.black.withOpacity(0.5)
-      ..style = PaintingStyle.fill
-      ..blendMode = BlendMode.dstOut;
-
-    final backgroundWithCutout = Path.combine(
-      PathOperation.difference,
-      backgroundPath,
-      cutoutPath,
-    );
-    canvas.drawPath(backgroundWithCutout, backgroundPaint);
-  }
+  final Future<void> Function() resumeCallBack;
+  final Future<void> Function() suspendingCallBack;
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      resumeCallBack();
+    } else if (state == AppLifecycleState.paused) {
+      suspendingCallBack();
+    }
   }
 }
 
@@ -361,6 +340,35 @@ class BarcodeOverlay extends CustomPainter {
       ..blendMode = BlendMode.dstOut;
 
     canvas.drawPath(cutoutPath, backgroundPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+class ScannerOverlay extends CustomPainter {
+  ScannerOverlay(this.scanWindow);
+
+  final Rect scanWindow;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final backgroundPath = Path()..addRect(Rect.largest);
+    final cutoutPath = Path()..addRect(scanWindow);
+
+    final backgroundPaint = Paint()
+      ..color = Colors.black.withOpacity(0.5)
+      ..style = PaintingStyle.fill
+      ..blendMode = BlendMode.dstOut;
+
+    final backgroundWithCutout = Path.combine(
+      PathOperation.difference,
+      backgroundPath,
+      cutoutPath,
+    );
+    canvas.drawPath(backgroundWithCutout, backgroundPaint);
   }
 
   @override

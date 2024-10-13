@@ -13,6 +13,7 @@ import 'package:fluttertest/home/Push.dart';
 import 'package:fluttertest/home/QR.dart';
 import 'package:fluttertest/home/Share.dart';
 import 'package:fluttertest/test/test_screen.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'firebase_options.dart';
 
@@ -42,7 +43,7 @@ void main() async {
       iOS: DarwinInitializationSettings(),
     ));
 
-  runApp(MyApp(cameras: cameras));
+  runApp(ProviderScope(child: MyApp(cameras: cameras)));
 }
 
 class MyApp extends StatelessWidget {
