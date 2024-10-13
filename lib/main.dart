@@ -9,8 +9,8 @@ import 'package:fluttertest/home/Camera.dart';
 import 'package:fluttertest/home/Clock.dart';
 import 'package:fluttertest/home/MyHomeWidget.dart';
 import 'package:fluttertest/home/Push.dart';
+import 'package:fluttertest/home/QR.dart';
 import 'package:fluttertest/home/Share.dart';
-import 'package:fluttertest/home/qr.dart';
 import 'package:fluttertest/test/test_screen.dart';
 
 void main() async {
