@@ -43,6 +43,14 @@ jobs:
         with:
           path: build/web/
 
+      - name: Deploy To Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_DEV_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: test1
+          file: build/app/outputs/flutter-apk/app-debug.apk
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
