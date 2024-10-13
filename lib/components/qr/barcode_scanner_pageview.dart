@@ -26,12 +26,8 @@ class _BarcodeScannerPageViewState extends State<BarcodeScannerPageView> {
       body: PageView(
         controller: pageController,
         onPageChanged: (index) async {
-          // Stop the camera view for the current page,
-          // and then restart the camera for the new page.
           await controller.stop();
 
-          // When switching pages, add a delay to the next start call.
-          // Otherwise the camera will start before the next page is displayed.
           await Future.delayed(const Duration(seconds: 1, milliseconds: 500));
 
           if (!mounted) {

@@ -21,7 +21,6 @@ class _BarcodeScannerWithScanWindowState
     return ValueListenableBuilder(
       valueListenable: controller,
       builder: (context, value, child) {
-        // Not ready.
         if (!value.isInitialized || !value.isRunning || value.error != null) {
           return const SizedBox();
         }
@@ -31,14 +30,12 @@ class _BarcodeScannerWithScanWindowState
           builder: (context, snapshot) {
             final BarcodeCapture? barcodeCapture = snapshot.data;
 
-            // No barcode.
             if (barcodeCapture == null || barcodeCapture.barcodes.isEmpty) {
               return const SizedBox();
             }
 
             final scannedBarcode = barcodeCapture.barcodes.first;
 
-            // No barcode corners, or size, or no camera preview size.
             if (value.size.isEmpty ||
                 scannedBarcode.size.isEmpty ||
                 scannedBarcode.corners.isEmpty) {
@@ -63,7 +60,6 @@ class _BarcodeScannerWithScanWindowState
     return ValueListenableBuilder(
       valueListenable: controller,
       builder: (context, value, child) {
-        // Not ready.
         if (!value.isInitialized ||
             !value.isRunning ||
             value.error != null ||
@@ -131,8 +127,6 @@ class ScannerOverlay extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // TODO: use `Offset.zero & size` instead of Rect.largest
-    // we need to pass the size to the custom paint widget
     final backgroundPath = Path()..addRect(Rect.largest);
     final cutoutPath = Path()..addRect(scanWindow);
 

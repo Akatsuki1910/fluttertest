@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
-import 'screens/bluetooth_off_screen.dart';
-import 'screens/scan_screen.dart';
+import '../components/blue/screens/bluetooth_off_screen.dart';
+import '../components/blue/screens/scan_screen.dart';
 
 class BluePage extends StatefulWidget {
   const BluePage({super.key});
