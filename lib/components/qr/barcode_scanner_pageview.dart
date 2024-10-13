@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-import './scanned_barcode_label.dart';
-import './scanner_error_widget.dart';
+import './barcode_scanner_listview.dart';
 
 class BarcodeScannerPageView extends StatefulWidget {
   const BarcodeScannerPageView({super.key});
@@ -37,10 +36,10 @@ class _BarcodeScannerPageViewState extends State<BarcodeScannerPageView> {
           unawaited(controller.start());
         },
         children: [
-          _BarcodeScannerPage(controller: controller),
+          BarcodeScanner(controller: controller),
           const SizedBox(),
-          _BarcodeScannerPage(controller: controller),
-          _BarcodeScannerPage(controller: controller),
+          BarcodeScanner(controller: controller),
+          BarcodeScanner(controller: controller),
         ],
       ),
     );
@@ -51,37 +50,5 @@ class _BarcodeScannerPageViewState extends State<BarcodeScannerPageView> {
     pageController.dispose();
     super.dispose();
     await controller.dispose();
-  }
-}
-
-class _BarcodeScannerPage extends StatelessWidget {
-  const _BarcodeScannerPage({required this.controller});
-
-  final MobileScannerController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        MobileScanner(
-          controller: controller,
-          fit: BoxFit.contain,
-          errorBuilder: (context, error, child) {
-            return ScannerErrorWidget(error: error);
-          },
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            alignment: Alignment.bottomCenter,
-            height: 100,
-            color: Colors.black.withOpacity(0.4),
-            child: Center(
-              child: ScannedBarcodeLabel(barcodes: controller.barcodes),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }

@@ -21,39 +21,6 @@ class _BarcodeScannerListViewState extends State<BarcodeScannerListView>
   );
 
   StreamSubscription<Object?>? _subscription;
-  double _zoomFactor = 0.0;
-
-  Widget _buildBarcodesListView() {
-    return StreamBuilder<BarcodeCapture>(
-      stream: controller.barcodes,
-      builder: (context, snapshot) {
-        final barcodes = snapshot.data?.barcodes;
-
-        if (barcodes == null || barcodes.isEmpty) {
-          return const Center(
-            child: Text(
-              'Scan Something!',
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          );
-        }
-
-        return ListView.builder(
-          itemCount: barcodes.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                barcodes[index].rawValue ?? 'No raw value',
-                overflow: TextOverflow.fade,
-                style: const TextStyle(color: Colors.white),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
 
   @override
   void initState() {
@@ -83,9 +50,67 @@ class _BarcodeScannerListViewState extends State<BarcodeScannerListView>
     }
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return BarcodeScanner(controller: controller);
+  }
+
+  @override
+  Future<void> dispose() async {
+    WidgetsBinding.instance.removeObserver(this);
+    unawaited(_subscription?.cancel());
+    _subscription = null;
+    super.dispose();
+    await controller.dispose();
+  }
+}
+
+class BarcodeScanner extends StatefulWidget {
+  const BarcodeScanner({super.key, required this.controller});
+  final MobileScannerController controller;
+
+  @override
+  State<BarcodeScanner> createState() => _BarcodeScannerState();
+}
+
+class _BarcodeScannerState extends State<BarcodeScanner> {
+  double _zoomFactor = 0.0;
+
+  Widget _buildBarcodesListView() {
+    return StreamBuilder<BarcodeCapture>(
+      stream: widget.controller.barcodes,
+      builder: (context, snapshot) {
+        final barcodes = snapshot.data?.barcodes;
+
+        if (barcodes == null || barcodes.isEmpty) {
+          return const Center(
+            child: Text(
+              'Scan Something!',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          );
+        }
+
+        return ListView.builder(
+          itemCount: barcodes.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                barcodes[index].rawValue ?? 'No raw value',
+                overflow: TextOverflow.fade,
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   Widget _buildZoomScaleSlider() {
     return ValueListenableBuilder(
-      valueListenable: controller,
+      valueListenable: widget.controller,
       builder: (context, state, child) {
         if (!state.isInitialized || !state.isRunning) {
           return const SizedBox.shrink();
@@ -111,7 +136,7 @@ class _BarcodeScannerListViewState extends State<BarcodeScannerListView>
                   onChanged: (value) {
                     setState(() {
                       _zoomFactor = value;
-                      controller.setZoomScale(value);
+                      widget.controller.setZoomScale(value);
                     });
                   },
                 ),
@@ -130,14 +155,14 @@ class _BarcodeScannerListViewState extends State<BarcodeScannerListView>
 
   Widget _buildBarcodeOverlay() {
     return ValueListenableBuilder(
-      valueListenable: controller,
+      valueListenable: widget.controller,
       builder: (context, value, child) {
         if (!value.isInitialized || !value.isRunning || value.error != null) {
           return const SizedBox();
         }
 
         return StreamBuilder<BarcodeCapture>(
-          stream: controller.barcodes,
+          stream: widget.controller.barcodes,
           builder: (context, snapshot) {
             final BarcodeCapture? barcodeCapture = snapshot.data;
 
@@ -169,7 +194,7 @@ class _BarcodeScannerListViewState extends State<BarcodeScannerListView>
 
   Widget _buildScanWindow(Rect scanWindowRect) {
     return ValueListenableBuilder(
-      valueListenable: controller,
+      valueListenable: widget.controller,
       builder: (context, value, child) {
         if (!value.isInitialized ||
             !value.isRunning ||
@@ -201,7 +226,7 @@ class _BarcodeScannerListViewState extends State<BarcodeScannerListView>
         children: [
           MobileScanner(
             scanWindow: scanWindow,
-            controller: controller,
+            controller: widget.controller,
             errorBuilder: (context, error, child) {
               return ScannerErrorWidget(error: error);
             },
@@ -224,11 +249,13 @@ class _BarcodeScannerListViewState extends State<BarcodeScannerListView>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ToggleFlashlightButton(controller: controller),
-                      StartStopMobileScannerButton(controller: controller),
+                      ToggleFlashlightButton(controller: widget.controller),
+                      StartStopMobileScannerButton(
+                          controller: widget.controller),
                       const Spacer(),
-                      SwitchCameraButton(controller: controller),
-                      AnalyzeImageFromGalleryButton(controller: controller),
+                      SwitchCameraButton(controller: widget.controller),
+                      AnalyzeImageFromGalleryButton(
+                          controller: widget.controller),
                     ],
                   ),
                 ],
@@ -238,15 +265,6 @@ class _BarcodeScannerListViewState extends State<BarcodeScannerListView>
         ],
       ),
     );
-  }
-
-  @override
-  Future<void> dispose() async {
-    WidgetsBinding.instance.removeObserver(this);
-    unawaited(_subscription?.cancel());
-    _subscription = null;
-    super.dispose();
-    await controller.dispose();
   }
 }
 
