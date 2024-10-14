@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:fluttertest/home/Api.dart';
 import 'package:fluttertest/home/Battely.dart';
 import 'package:fluttertest/home/Blue.dart';
 import 'package:fluttertest/home/Camera.dart';
@@ -117,6 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
       PagesData(
           page: const BluePage(), title: 'Bluetooth', icon: Icons.bluetooth),
       PagesData(page: const PaintPage(), title: 'Paint', icon: Icons.brush),
+      PagesData(page: ApiPage(), title: 'Api', icon: Icons.api),
     ];
 
     return LayoutBuilder(builder: (context, constraints) {
