@@ -103,7 +103,7 @@ class BarcodeScanner extends HookConsumerWidget {
             color: Colors.black.withOpacity(0.4),
             child: Column(
               children: [
-                _buildZoomScaleSlider(controller, zoomFactor),
+                _buildZoomScaleSlider(context, controller, zoomFactor),
                 Expanded(child: _buildBarcodesListView(controller)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -153,84 +153,78 @@ class BarcodeScanner extends HookConsumerWidget {
   }
 
   Widget _buildZoomScaleSlider(
+    BuildContext context,
     MobileScannerController controller,
     ValueNotifier<double> zoomFactor,
   ) {
-    return ValueListenableBuilder(
-      valueListenable: controller,
-      builder: (context, state, child) {
-        if (!state.isInitialized || !state.isRunning) {
-          return const SizedBox.shrink();
-        }
+    final value = useValueListenable(controller);
 
-        final TextStyle labelStyle = Theme.of(context)
-            .textTheme
-            .headlineMedium!
-            .copyWith(color: Colors.white);
+    if (!value.isInitialized || !value.isRunning) {
+      return const SizedBox.shrink();
+    }
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            children: [
-              Text(
-                '0%',
-                overflow: TextOverflow.fade,
-                style: labelStyle,
-              ),
-              Expanded(
-                child: Slider(
-                  value: zoomFactor.value,
-                  onChanged: (value) {
-                    zoomFactor.value = value;
-                    controller.setZoomScale(value);
-                  },
-                ),
-              ),
-              Text(
-                '100%',
-                overflow: TextOverflow.fade,
-                style: labelStyle,
-              ),
-            ],
+    final TextStyle labelStyle = Theme.of(context)
+        .textTheme
+        .headlineMedium!
+        .copyWith(color: Colors.white);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        children: [
+          Text(
+            '0%',
+            overflow: TextOverflow.fade,
+            style: labelStyle,
           ),
-        );
-      },
+          Expanded(
+            child: Slider(
+              value: zoomFactor.value,
+              onChanged: (value) {
+                zoomFactor.value = value;
+                controller.setZoomScale(value);
+              },
+            ),
+          ),
+          Text(
+            '100%',
+            overflow: TextOverflow.fade,
+            style: labelStyle,
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildBarcodeOverlay(MobileScannerController controller) {
     final value = useValueListenable(controller);
+    final snapshot = useStream(controller.barcodes);
 
     if (!value.isInitialized || !value.isRunning || value.error != null) {
       return const SizedBox();
     }
 
-    return StreamBuilder<BarcodeCapture>(
-      stream: controller.barcodes,
-      builder: (context, snapshot) {
-        final BarcodeCapture? barcodeCapture = snapshot.data;
+    final BarcodeCapture? barcodeCapture = snapshot.data;
 
-        if (barcodeCapture == null || barcodeCapture.barcodes.isEmpty) {
-          return const SizedBox();
-        }
+    if (barcodeCapture == null || barcodeCapture.barcodes.isEmpty) {
+      return const SizedBox();
+    }
 
-        final scannedBarcode = barcodeCapture.barcodes.first;
+    final scannedBarcode = barcodeCapture.barcodes.first;
 
-        if (value.size.isEmpty ||
-            scannedBarcode.size.isEmpty ||
-            scannedBarcode.corners.isEmpty) {
-          return const SizedBox();
-        }
+    if (value.size.isEmpty ||
+        scannedBarcode.size.isEmpty ||
+        scannedBarcode.corners.isEmpty) {
+      return const SizedBox();
+    }
 
-        return CustomPaint(
-          painter: BarcodeOverlay(
-            barcodeCorners: scannedBarcode.corners,
-            barcodeSize: scannedBarcode.size,
-            boxFit: BoxFit.contain,
-            cameraPreviewSize: value.size,
-          ),
-        );
-      },
+    return CustomPaint(
+      painter: BarcodeOverlay(
+        barcodeCorners: scannedBarcode.corners,
+        barcodeSize: scannedBarcode.size,
+        boxFit: BoxFit.contain,
+        cameraPreviewSize: value.size,
+      ),
     );
   }
 
