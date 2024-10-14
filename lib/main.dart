@@ -9,6 +9,7 @@ import 'package:fluttertest/home/Blue.dart';
 import 'package:fluttertest/home/Camera.dart';
 import 'package:fluttertest/home/Clock.dart';
 import 'package:fluttertest/home/MyHomeWidget.dart';
+import 'package:fluttertest/home/Paint.dart';
 import 'package:fluttertest/home/Push.dart';
 import 'package:fluttertest/home/QR.dart';
 import 'package:fluttertest/home/Share.dart';
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Test App',
       theme: ThemeData(
         useMaterial3: true,
@@ -114,6 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
       PagesData(page: const QRPage(), title: 'QR', icon: Icons.qr_code),
       PagesData(
           page: const BluePage(), title: 'Bluetooth', icon: Icons.bluetooth),
+      PagesData(page: const PaintPage(), title: 'Paint', icon: Icons.brush),
     ];
 
     return LayoutBuilder(builder: (context, constraints) {
