@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertest/components/AnalogClock.dart';
-import 'package:fluttertest/components/DigitalClock.dart';
+
+import './AnalogClock.dart';
+import './DigitalClock.dart';
 
 class ConsolidatedClock extends StatelessWidget {
   final DateTime time;

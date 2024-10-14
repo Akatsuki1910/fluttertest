@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:fluttertest/components/ConsolidatedClock.dart';
+
+import './ConsolidatedClock.dart';
 
 class TickerBuilder extends StatefulWidget {
   const TickerBuilder({super.key});

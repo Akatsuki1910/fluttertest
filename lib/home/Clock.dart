@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertest/components/Ticker.dart';
-import 'package:fluttertest/components/Timer.dart';
+
+import '../components/Ticker.dart';
+import '../components/Timer.dart';
 
 class ClockPage extends StatefulWidget {
   const ClockPage({super.key});

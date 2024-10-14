@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertest/components/ConsolidatedClock.dart';
+
+import './ConsolidatedClock.dart';
 
 class TimerBuilder extends StatefulWidget {
   const TimerBuilder({super.key});

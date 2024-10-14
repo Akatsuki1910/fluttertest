@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:fluttertest/home/Api.dart';
-import 'package:fluttertest/home/Battely.dart';
-import 'package:fluttertest/home/Blue.dart';
-import 'package:fluttertest/home/Camera.dart';
-import 'package:fluttertest/home/Clock.dart';
-import 'package:fluttertest/home/MyHomeWidget.dart';
-import 'package:fluttertest/home/Paint.dart';
-import 'package:fluttertest/home/Push.dart';
-import 'package:fluttertest/home/QR.dart';
-import 'package:fluttertest/home/Share.dart';
-import 'package:fluttertest/test/test_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import './home/Api.dart';
+import './home/Battely.dart';
+import './home/Blue.dart';
+import './home/Camera.dart';
+import './home/Clock.dart';
+import './home/MyHomeWidget.dart';
+import './home/Paint.dart';
+import './home/Push.dart';
+import './home/QR.dart';
+import './home/Share.dart';
+import './test/test_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {

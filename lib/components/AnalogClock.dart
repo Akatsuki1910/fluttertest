@@ -1,9 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertest/components/ClockCenterCircle.dart';
-import 'package:fluttertest/components/ClockHand.dart';
-import 'package:fluttertest/components/ClockMarker.dart';
+
+import './ClockCenterCircle.dart';
+import './ClockHand.dart';
+import './ClockMarker.dart';
 
 class AnalogClockRenderer extends StatelessWidget {
   final DateTime time;

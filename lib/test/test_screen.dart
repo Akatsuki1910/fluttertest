@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertest/test/build_page.dart';
-import 'package:fluttertest/test/start_page.dart';
+
+import './build_page.dart';
+import './start_page.dart';
 
 class TestScreen extends StatefulWidget {
   static const routeName = '/test-screen';
