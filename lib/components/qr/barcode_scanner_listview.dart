@@ -124,32 +124,29 @@ class BarcodeScanner extends HookConsumerWidget {
   }
 
   Widget _buildBarcodesListView(MobileScannerController controller) {
-    return StreamBuilder<BarcodeCapture>(
-      stream: controller.barcodes,
-      builder: (context, snapshot) {
-        final barcodes = snapshot.data?.barcodes;
+    final snapshot = useStream(controller.barcodes);
 
-        if (barcodes == null || barcodes.isEmpty) {
-          return const Center(
-            child: Text(
-              'Scan Something!',
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          );
-        }
+    final barcodes = snapshot.data?.barcodes;
 
-        return ListView.builder(
-          itemCount: barcodes.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                barcodes[index].rawValue ?? 'No raw value',
-                overflow: TextOverflow.fade,
-                style: const TextStyle(color: Colors.white),
-              ),
-            );
-          },
+    if (barcodes == null || barcodes.isEmpty) {
+      return const Center(
+        child: Text(
+          'Scan Something!',
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+      );
+    }
+
+    return ListView.builder(
+      itemCount: barcodes.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            barcodes[index].rawValue ?? 'No raw value',
+            overflow: TextOverflow.fade,
+            style: const TextStyle(color: Colors.white),
+          ),
         );
       },
     );
@@ -202,59 +199,53 @@ class BarcodeScanner extends HookConsumerWidget {
   }
 
   Widget _buildBarcodeOverlay(MobileScannerController controller) {
-    return ValueListenableBuilder(
-      valueListenable: controller,
-      builder: (context, value, child) {
-        if (!value.isInitialized || !value.isRunning || value.error != null) {
+    final value = useValueListenable(controller);
+
+    if (!value.isInitialized || !value.isRunning || value.error != null) {
+      return const SizedBox();
+    }
+
+    return StreamBuilder<BarcodeCapture>(
+      stream: controller.barcodes,
+      builder: (context, snapshot) {
+        final BarcodeCapture? barcodeCapture = snapshot.data;
+
+        if (barcodeCapture == null || barcodeCapture.barcodes.isEmpty) {
           return const SizedBox();
         }
 
-        return StreamBuilder<BarcodeCapture>(
-          stream: controller.barcodes,
-          builder: (context, snapshot) {
-            final BarcodeCapture? barcodeCapture = snapshot.data;
+        final scannedBarcode = barcodeCapture.barcodes.first;
 
-            if (barcodeCapture == null || barcodeCapture.barcodes.isEmpty) {
-              return const SizedBox();
-            }
+        if (value.size.isEmpty ||
+            scannedBarcode.size.isEmpty ||
+            scannedBarcode.corners.isEmpty) {
+          return const SizedBox();
+        }
 
-            final scannedBarcode = barcodeCapture.barcodes.first;
-
-            if (value.size.isEmpty ||
-                scannedBarcode.size.isEmpty ||
-                scannedBarcode.corners.isEmpty) {
-              return const SizedBox();
-            }
-
-            return CustomPaint(
-              painter: BarcodeOverlay(
-                barcodeCorners: scannedBarcode.corners,
-                barcodeSize: scannedBarcode.size,
-                boxFit: BoxFit.contain,
-                cameraPreviewSize: value.size,
-              ),
-            );
-          },
+        return CustomPaint(
+          painter: BarcodeOverlay(
+            barcodeCorners: scannedBarcode.corners,
+            barcodeSize: scannedBarcode.size,
+            boxFit: BoxFit.contain,
+            cameraPreviewSize: value.size,
+          ),
         );
       },
     );
   }
 
   Widget _buildScanWindow(Rect scanWindowRect) {
-    return ValueListenableBuilder(
-      valueListenable: controller,
-      builder: (context, value, child) {
-        if (!value.isInitialized ||
-            !value.isRunning ||
-            value.error != null ||
-            value.size.isEmpty) {
-          return const SizedBox();
-        }
+    final value = useValueListenable(controller);
 
-        return CustomPaint(
-          painter: ScannerOverlay(scanWindowRect),
-        );
-      },
+    if (!value.isInitialized ||
+        !value.isRunning ||
+        value.error != null ||
+        value.size.isEmpty) {
+      return const SizedBox();
+    }
+
+    return CustomPaint(
+      painter: ScannerOverlay(scanWindowRect),
     );
   }
 }
