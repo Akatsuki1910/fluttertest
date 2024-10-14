@@ -118,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
       PagesData(
           page: const BluePage(), title: 'Bluetooth', icon: Icons.bluetooth),
       PagesData(page: const PaintPage(), title: 'Paint', icon: Icons.brush),
-      PagesData(page: ApiPage(), title: 'Api', icon: Icons.api),
+      PagesData(page: const ApiPage(), title: 'Api', icon: Icons.api),
     ];
 
     return LayoutBuilder(builder: (context, constraints) {
