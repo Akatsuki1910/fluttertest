@@ -1,9 +1,11 @@
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:fluttertest/home/Sensors.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import './home/Api.dart';
@@ -26,6 +28,13 @@ void main() async {
   );
   usePathUrlStrategy();
   FlutterBluePlus.setLogLevel(LogLevel.verbose, color: true);
+
+  SystemChrome.setPreferredOrientations(
+    [
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ],
+  );
 
   List<CameraDescription> cameras = [];
 
@@ -119,6 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
           page: const BluePage(), title: 'Bluetooth', icon: Icons.bluetooth),
       PagesData(page: const PaintPage(), title: 'Paint', icon: Icons.brush),
       PagesData(page: const ApiPage(), title: 'Api', icon: Icons.api),
+      PagesData(
+          page: const SensorPage(), title: 'Sensors', icon: Icons.sensor_door),
     ];
 
     return LayoutBuilder(builder: (context, constraints) {
