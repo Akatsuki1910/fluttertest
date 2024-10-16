@@ -14,6 +14,7 @@ import './home/Blue.dart';
 import './home/Camera.dart';
 import './home/Clock.dart';
 import './home/MyHomeWidget.dart';
+import './home/Nfc.dart';
 import './home/Paint.dart';
 import './home/Push.dart';
 import './home/QR.dart';
@@ -130,6 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
       PagesData(page: const ApiPage(), title: 'Api', icon: Icons.api),
       PagesData(
           page: const SensorPage(), title: 'Sensors', icon: Icons.sensor_door),
+      PagesData(page: const NfcPage(), title: 'Nfc', icon: Icons.nfc)
     ];
 
     return LayoutBuilder(builder: (context, constraints) {
