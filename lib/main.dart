@@ -13,6 +13,7 @@ import './home/Battely.dart';
 import './home/Blue.dart';
 import './home/Camera.dart';
 import './home/Clock.dart';
+import './home/Face.dart';
 import './home/MyHomeWidget.dart';
 import './home/Nfc.dart';
 import './home/Paint.dart';
@@ -131,7 +132,11 @@ class _MyHomePageState extends State<MyHomePage> {
       PagesData(page: const ApiPage(), title: 'Api', icon: Icons.api),
       PagesData(
           page: const SensorPage(), title: 'Sensors', icon: Icons.sensor_door),
-      PagesData(page: const NfcPage(), title: 'Nfc', icon: Icons.nfc)
+      PagesData(page: const NfcPage(), title: 'Nfc', icon: Icons.nfc),
+      PagesData(
+          page: FacePage(cameras: widget.cameras),
+          title: 'Face',
+          icon: Icons.face),
     ];
 
     return LayoutBuilder(builder: (context, constraints) {
