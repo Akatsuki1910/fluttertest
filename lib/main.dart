@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,11 +9,13 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:fluttertest/home/Sensors.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import './firebase_options.dart';
 import './home/Api.dart';
 import './home/Battely.dart';
 import './home/Blue.dart';
 import './home/Camera.dart';
 import './home/Clock.dart';
+import './home/DB.dart';
 import './home/Face.dart';
 import './home/MyHomeWidget.dart';
 import './home/Nfc.dart';
@@ -21,12 +24,14 @@ import './home/Push.dart';
 import './home/QR.dart';
 import './home/Share.dart';
 import './test/test_screen.dart';
-import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseFirestore.instance.settings = const Settings(
+    persistenceEnabled: true,
   );
   usePathUrlStrategy();
   FlutterBluePlus.setLogLevel(LogLevel.verbose, color: true);
@@ -105,7 +110,7 @@ class PagesData {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var selectedIndex = 2;
+  var selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +142,10 @@ class _MyHomePageState extends State<MyHomePage> {
           page: FacePage(cameras: widget.cameras),
           title: 'Face',
           icon: Icons.face),
+      PagesData(
+          page: const DBPage(),
+          title: 'Database',
+          icon: Icons.data_usage_rounded),
     ];
 
     return LayoutBuilder(builder: (context, constraints) {

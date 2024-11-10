@@ -1,8 +1,9 @@
 {
   "project_info": {
     "project_number": "850890787733",
+    "firebase_url": "https://fluttertest-23551-default-rtdb.firebaseio.com",
     "project_id": "fluttertest-23551",
-    "storage_bucket": "fluttertest-23551.appspot.com"
+    "storage_bucket": "fluttertest-23551.firebasestorage.app"
   },
   "client": [
     {

@@ -58,7 +58,7 @@ dependencies:
   nfc_manager: ^3.5.0
   google_ml_kit: ^0.16.3
   image: ^4.3.0
-  firebase_database: ^11.1.5
+  cloud_firestore: ^5.4.5
 
 dev_dependencies:
   flutter_test:

@@ -55,7 +55,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '850890787733',
     projectId: 'fluttertest-23551',
     authDomain: 'fluttertest-23551.firebaseapp.com',
-    storageBucket: 'fluttertest-23551.appspot.com',
+    databaseURL: 'https://fluttertest-23551-default-rtdb.firebaseio.com',
+    storageBucket: 'fluttertest-23551.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -63,6 +64,8 @@ class DefaultFirebaseOptions {
     appId: '1:850890787733:android:7943b145a556d142e7c49c',
     messagingSenderId: '850890787733',
     projectId: 'fluttertest-23551',
-    storageBucket: 'fluttertest-23551.appspot.com',
+    databaseURL: 'https://fluttertest-23551-default-rtdb.firebaseio.com',
+    storageBucket: 'fluttertest-23551.firebasestorage.app',
   );
+
 }
